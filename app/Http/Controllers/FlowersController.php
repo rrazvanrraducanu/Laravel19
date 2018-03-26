@@ -29,20 +29,15 @@ class FlowersController extends Controller
 
     public function store()
     {
-        $validation = Validator::make(Request::all(), [
-            'nume' => 'required',
-            'culoare' => 'required',
-            'marime' => 'required',
-            'pret' => 'required'
-        ]);
-        if ($validation->fails()) {
-            return redirect()->back()->withInput()->withErrors($validation->messages());
+        if(!Flower::isValid(Request::all())){
+            return redirect()->back()->withInput()->withErrors(Flower::$errors);
         }
-        $flower = new Flower;
-        $flower->nume = Request::input('nume');
-        $flower->marime = Request::input('marime');
-        $flower->culoare = Request::input('culoare');
-        $flower->pret = Request::input('pret');
+
+        $flower=new Flower;
+        $flower->nume=Request::input('nume');
+        $flower->marime=Request::input('marime');
+        $flower->culoare=Request::input('culoare');
+        $flower->pret=Request::input('pret');
         $flower->save();
 
         return redirect('/flowers');
